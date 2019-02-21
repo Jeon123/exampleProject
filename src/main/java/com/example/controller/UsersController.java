@@ -52,7 +52,7 @@ public class UsersController {
 		
 		session.removeAttribute("loginUser");
 		
-		return "index";
+		return "redirect:/";
 	}
 	
 	
