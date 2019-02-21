@@ -2,8 +2,11 @@ package com.example.controller;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,6 +21,9 @@ public class UsersController {
 	
 	@Autowired
 	private LoginService loginService;
+	
+	@Autowired
+	private HttpSession session;
 
 	@PostMapping(value = "/joinRequest")
 	public String joinRequest(@RequestParam Map<String, String> paramMap) {
@@ -39,6 +45,14 @@ public class UsersController {
 		String page = loginService.login(userId, userPw);
 		
 		return page;
+	}
+	
+	@GetMapping(value ="/logout")
+	public String logout() {
+		
+		session.removeAttribute("loginUser");
+		
+		return "index";
 	}
 	
 	
