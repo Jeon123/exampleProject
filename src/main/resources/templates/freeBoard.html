@@ -86,7 +86,7 @@
     </div>
     <div class="col-sm-8 text-left"> 
       <h4>FreeBoard</h4>
-      <a th:if="${session.loginUser==null}" href="/freeBoardWritePage">글쓰기</a>
+      <a th:if="${session.loginUser!=null}" href="/freeBoardWritePage">글쓰기</a>
       <table>
       	<thead>
       		<tr>
