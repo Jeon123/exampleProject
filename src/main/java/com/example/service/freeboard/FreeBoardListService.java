@@ -37,7 +37,7 @@ public class FreeBoardListService {
 		if(freeboardPage.getSize() == 0) {
 			session.setAttribute("boardList", new ArrayList<FreeBoard>());
 			session.setAttribute("pageMaker", pageMaker);
-			return "freeboard";
+			return "freeBoard";
 		}
 				
 		List<FreeBoard> freeboardList = freeboardPage.getContent();
@@ -45,7 +45,7 @@ public class FreeBoardListService {
 		session.setAttribute("boardList", freeboardList);
 		session.setAttribute("pageMaker", pageMaker);
 
-		return "freeboard";
+		return "freeBoard";
 	}
 	
 }

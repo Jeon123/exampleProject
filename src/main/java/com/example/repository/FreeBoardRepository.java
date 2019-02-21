@@ -7,5 +7,5 @@ import com.example.model.FreeBoard;
 
 @Repository
 public interface FreeBoardRepository extends JpaRepository<FreeBoard, Long>{
-	FreeBoard findByFreeId(Long freeId);
+	public FreeBoard findByFreeId(Long freeId);
 }

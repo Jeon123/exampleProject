@@ -9,8 +9,8 @@ import javax.persistence.Table;
 
 import lombok.Data;
 
-@Data
 @Entity
+@Data
 @Table(name = "freeboard")
 public class FreeBoard {
 	
