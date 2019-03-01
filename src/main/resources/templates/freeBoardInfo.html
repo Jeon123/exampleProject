@@ -41,6 +41,9 @@
     }
   </style>
   <script>
+	function page(pageNum) {
+  		location.href = "/freeBoard?pageNum=" + pageNum
+  	}
   	function freeBoardDelete(freeId) {
   		location.href="/freeBoardDelete?freeId=" + freeId
   	}
@@ -91,9 +94,10 @@
       <th:block th:if="${session.loginUser!=null}">
 	      <th:block th:if="${session.freeBoard.getWriter()} == ${session.loginUser.getUsername()}">
 		      <a th:onclick="|javascript:freeBoardUpdate('${session.freeBoard.getFreeId()}')|">수정</a>&nbsp;
-		      <a th:onclick="|javascript:freeBoardDelete('${session.freeBoard.getFreeId()}')|">삭제</a>&nbsp;
+		      <a th:onclick="|javascript:freeBoardDelete('${session.freeBoard.getFreeId()}')|">삭제</a>&nbsp;&nbsp;
 	      </th:block>
       </th:block>
+		      <a th:onclick="|javascript:page('${session.pageMaker.getPageNum()}')|">목록으로</a>&nbsp;
     </div>
     <div class="col-sm-2 sidenav">
       <div class="well">

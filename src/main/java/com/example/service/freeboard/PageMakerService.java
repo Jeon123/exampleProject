@@ -20,7 +20,7 @@ public class PageMakerService {
         // 전체 페이지 개수를 지정한다.
         pageMaker.setTotalPageNum();
         // 현재 페이지를 페이지 객체에 다시 지정해준다//몇번 페이지인지 PageMaker에 세팅한다
-        pageMaker.setPageNum(pageNum-1);
+        pageMaker.setPageNum(pageNum);
         // 한 페이지에 몇개씩 보여줄지 세팅한다
         pageMaker.setContentNum(contentNum);
         // 현재 페이지블록이 몇번인지 현재 페이지 번호를 통해서 지정한다
