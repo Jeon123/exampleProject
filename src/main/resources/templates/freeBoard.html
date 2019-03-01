@@ -45,6 +45,16 @@
   		location.href = "/freeBoard?pageNum=" + pageNum
   	}
   	
+  	function nextPage(pageNum) {
+  		var num = parseInt(pageNum) + 2
+  		location.href = "/freeBoard?pageNum=" + num
+  	}
+  	
+  	function prevPage(pageNum) {
+  		//var num = parseInt(pageNum) - 2
+  		location.href = "/freeBoard?pageNum=" + pageNum
+  	}
+  	
   	function getPost(freeId) {
   		location.href = "/freeBoardInfo?freeId=" + freeId
   	}
@@ -107,11 +117,15 @@
       </table>
       
       <!-- 페이지 번호 -->
-      <a th:if="${session.pageMaker.isPrev()}" style="text-decoration: none" th:onclick="|javascript:page('${session.pageMaker.getStartPage()}')|">&laquo;</a>
-      <th:block th:each="pageNumber:${#numbers.sequence(session.pageMaker.getStartPage(), session.pageMaker.getEndPage())}">
-      	&nbsp;<a th:onclick="|javascript:page('${pageNumber}')|" th:text="${pageNumber}"></a>&nbsp;
+      <th:block th:if=${session.pageMaker.getTotalCount()!=0}>
+	      <a th:if="${session.pageMaker.isPrev()}" style="text-decoration: none" th:onclick="|javascript:page('1')|">&laquo;&laquo;</a>
+	      <a th:if="${session.pageMaker.isPrev()} OR ${session.pageMaker.getPageNum()!=0}" style="text-decoration: none" th:onclick="|javascript:prevPage('${session.pageMaker.getPageNum()}')|">&laquo;</a>
+	      <th:block th:each="pageNumber:${#numbers.sequence(session.pageMaker.getStartPage(), session.pageMaker.getEndPage())}">
+	      	&nbsp;<a th:onclick="|javascript:page('${pageNumber}')|" th:text="${pageNumber}"></a>&nbsp;
+	      </th:block>
+	      <a th:if="${session.pageMaker.isNext()} OR ${session.pageMaker.getPageNum()!=session.pageMaker.getTotalPageNum()-1}" style="text-decoration: none" th:onclick="|javascript:nextPage('${session.pageMaker.getPageNum()}')|">&raquo;</a>
+	      <a th:if="${session.pageMaker.isNext()}" style="text-decoration: none" th:onclick="|javascript:page('${session.pageMaker.getTotalPageNum()}')|">&raquo;&raquo;</a>
       </th:block>
-      <a th:if="${session.pageMaker.isNext()}" style="text-decoration: none" th:onclick="|javascript:page('${session.pageMaker.getEndPage()}')|">&raquo;</a>
       <hr>
     </div>
     <div class="col-sm-2 sidenav">

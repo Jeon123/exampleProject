@@ -17,6 +17,8 @@ public class PageMakerService {
         /*---------페이지 객체에 새로운 정보 다시 지정해주는 부분------------------*/
         // 전체 게시글 개수 지정한다
         pageMaker.setTotalCount(totalCount);
+        // 전체 페이지 개수를 지정한다.
+        pageMaker.setTotalPageNum();
         // 현재 페이지를 페이지 객체에 다시 지정해준다//몇번 페이지인지 PageMaker에 세팅한다
         pageMaker.setPageNum(pageNum-1);
         // 한 페이지에 몇개씩 보여줄지 세팅한다
@@ -25,8 +27,6 @@ public class PageMakerService {
         pageMaker.setCurrentBlock(pageNum);
         // 마지막 블록 번호를 전체 게시글 수를 통해서 정한다
         pageMaker.setLastblock(pageMaker.getTotalCount());
-        
-        /*---------페이지 객체에 새로운 정보 다시 지정해주는 부분------------------*/
         // 현재 페이지 번호로 화살표 나타낼지 결정한다
         pageMaker.prevNext(pageNum);
         // 시작페이지 번호를 현재 페이지 블록으로 정한다

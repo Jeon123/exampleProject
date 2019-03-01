@@ -88,9 +88,11 @@
       <br><br>
       <textarea th:text="${session.freeBoard.getContent()}" readonly="readonly"></textarea>
       <br><br>
-      <th:block th:if="${session.freeBoard.getWriter()} == ${session.loginUser.getUsername()}">
-	      <a th:onclick="|javascript:freeBoardUpdate('${session.freeBoard.getFreeId()}')|">수정</a>&nbsp;
-	      <a th:onclick="|javascript:freeBoardDelete('${session.freeBoard.getFreeId()}')|">삭제</a>&nbsp;
+      <th:block th:if="${session.loginUser!=null}">
+	      <th:block th:if="${session.freeBoard.getWriter()} == ${session.loginUser.getUsername()}">
+		      <a th:onclick="|javascript:freeBoardUpdate('${session.freeBoard.getFreeId()}')|">수정</a>&nbsp;
+		      <a th:onclick="|javascript:freeBoardDelete('${session.freeBoard.getFreeId()}')|">삭제</a>&nbsp;
+	      </th:block>
       </th:block>
     </div>
     <div class="col-sm-2 sidenav">

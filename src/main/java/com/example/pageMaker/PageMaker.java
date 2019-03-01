@@ -3,13 +3,14 @@ package com.example.pageMaker;
 public class PageMaker {
     private int totalCount;			// 전체 게시물 개수
     private int pageNum;			// 현재 페이지 번호
+    private int totalPageNum;		// 전체 페이지 개수
     private int contentNum = 10;	// 한페이지에 보이는 게시글 
-    private int startPage = 1;		// 현재 페이지 블록의 시작페이지
-    private int endPage = 5;		// 현재 페이지 블록의 마지막 페이
+    private int startPage = 0;		// 현재 페이지 블록의 시작페이지
+    private int endPage = 0;		// 현재 페이지 블록의 마지막 페이지
     private boolean prev = false;	// 이전 페이지 화살표
     private boolean next;			// 다음 페이지 화살표
     private int currentBlock;		// 현재 페이지 블록
-    private int lastBlock;			// 마지막 페이지 블
+    private int lastBlock;			// 마지막 페이지 블록
     
     public void prevNext(int pageNum) {
     	if (pageNum > 0 && pageNum < 6) {
@@ -137,8 +138,14 @@ public class PageMaker {
     	if (totalCount % (5 * this.contentNum ) > 0) {
     		this.lastBlock++;
     	}
-    } 
- 
-    
+    }
+
+	public int getTotalPageNum() {
+		return totalPageNum;
+	}
+
+	public void setTotalPageNum() {
+		this.totalPageNum = calcPage(getTotalCount(), getContentNum());
+	} 
  
 }
