@@ -16,6 +16,9 @@ public class PageMaker {
     	if (pageNum > 0 && pageNum < 6) {
     		setPrev(false);
     		setNext(true);
+    		if(pageNum == getTotalPageNum()) {
+    			setNext(false);
+    		}
     	} else if(getLastBlock() == getCurrentBlock()) {
     		// 5개씩 페이지의 그룹번호를 지정한다.
     		// 그룹 번호가 3이라는 것은 해당 페이지 그룹이 마지막이라는 것이기에 이전 화살표만 활성화한다 

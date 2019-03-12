@@ -1,147 +1,72 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	  data-layout-decorate="~{layout/default}"
+	  >
 <head>
-  <title>spring boot</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-  <style>
-    /* Remove the navbar's default margin-bottom and rounded borders */ 
-    .navbar {
-      margin-bottom: 0;
-      border-radius: 0;
-    }
-    
-    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-    .row.content {height: 450px}
-    
-    /* Set gray background color and 100% height */
-    .sidenav {
-      padding-top: 20px;
-      background-color: #f1f1f1;
-      height: 100%;
-    }
-    
-    /* Set black background color, white text and some padding */
-    footer {
-      background-color: #555;
-      color: white;
-      padding: 15px;
-    }
-    
-    /* On small screens, set height to 'auto' for sidenav and grid */
-    @media screen and (max-width: 767px) {
-      .sidenav {
-        height: auto;
-        padding: 15px;
-      }
-      .row.content {height:auto;} 
-    }
-  </style>
   <script type="text/javascript">
   	function page(pageNum) {
-  		location.href = "/freeBoard?pageNum=" + pageNum
+  		location.href = "/?pageNum=" + pageNum;
   	}
   	
   	function nextPage(pageNum) {
   		var num = parseInt(pageNum) + 1
-  		location.href = "/freeBoard?pageNum=" + num
+  		location.href = "/?pageNum=" + num;
   	}
   	
   	function prevPage(pageNum) {
   		var num = parseInt(pageNum) - 1
-  		location.href = "/freeBoard?pageNum=" + num
+  		location.href = "/?pageNum=" + num;
   	}
   	
   	function getPost(freeId) {
-  		location.href = "/freeBoardInfo?freeId=" + freeId
+  		location.href = "/" + freeId;
   	}
+  	
+  	$(document).on("submit", "#search", function(event){
+  		event.preventDefault();
+  		if($("#searchText").val()=="") {
+  			alert("검색어를 입력해 주세요.");
+  		}else {
+	  		location.href = "search/" + $("#searchText").val();
+  		}
+  	});
   </script>
-
 </head>
-<body>
 
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>                        
-      </button>
-      <a class="navbar-brand" href="/">Logo</a>
-    </div>
-    <div class="collapse navbar-collapse" id="myNavbar">
-      <ul class="nav navbar-nav">
-        <li class="active"><a href="/">Home</a></li>
-        <li><a href="/freeBoard">FreeBoard</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li th:if="${session.loginUser==null}"><a href="/joinPage"><span class="glyphicon glyphicon-log-in"></span> Join</a></li>
-        <li th:if="${session.loginUser==null}"><a href="/loginPage"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-        <li th:if="${session.loginUser!=null}"><a href="/logout"><span class="glyphicon glyphicon-log-in"></span> Logout</a></li>
-      </ul>
-    </div>
+  <div layout:fragment="content" class="col-sm-10 text-left"> 
+    <h4>FreeBoard</h4>
+    <button th:if="${session.loginUser!=null}" onclick="location.href='/boardWrite'">글쓰기</button>
+    <table>
+    	<thead>
+    		<tr>
+    			<th>&nbsp;&nbsp;글 제목&nbsp;&nbsp;</th>
+    			<th>&nbsp;&nbsp;작성&nbsp;&nbsp;</th>
+    		</tr>
+    	</thead>
+    	<tbody id="textsearch">
+	<th:block th:if="${freeBoard!=null}">
+		<th:block th:each="board:${freeBoard}">
+			<tr>
+				<td><a th:onclick="|javascript:getPost('${board.freeId}')|" th:text="${board.title}"></a></td>
+				<td><span th:text="${board.writer}"></span></td>
+			</tr>
+		</th:block>
+	</th:block>
+    	</tbody>
+    </table>
+    
+    <!-- 페이지 번호 -->
+     <th:block th:if=${pageMaker.totalCount!=0}>
+     <a th:if="${pageMaker.pageNum!=1}" style="text-decoration: none" th:onclick="|javascript:page('1')|">&laquo;&laquo;</a>
+     <a th:if="${pageMaker.pageNum!=1}" style="text-decoration: none" th:onclick="|javascript:prevPage('${pageMaker.pageNum}')|">&laquo;</a>
+     <th:block th:each="pageNumber:${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
+     	&nbsp;<a th:onclick="|javascript:page('${pageNumber}')|" th:text="${pageNumber}"></a>&nbsp;
+     </th:block>
+     <a th:if="${(pageMaker.pageNum)!=pageMaker.totalPageNum}" style="text-decoration: none" th:onclick="|javascript:nextPage('${pageMaker.pageNum}')|">&raquo;</a>
+     <a th:if="${(pageMaker.pageNum)!=pageMaker.totalPageNum}" style="text-decoration: none" th:onclick="|javascript:page('${pageMaker.totalPageNum}')|">&raquo;&raquo;</a>
+    </th:block>
+    <hr>
   </div>
-</nav>
-  
-<div class="container-fluid text-center">    
-  <div class="row content">
-    <div class="col-sm-2 sidenav">
-      <p><a href="#">Link</a></p>
-      <p><a href="#">Link</a></p>
-      <p><a href="#">Link</a></p>
-    </div>
-    <div class="col-sm-8 text-left"> 
-      <h4>FreeBoard</h4>
-      <a th:if="${session.loginUser!=null}" href="/freeBoardWritePage">글쓰기</a>
-      <table>
-      	<thead>
-      		<tr>
-      			<th>&nbsp;&nbsp;글 번호&nbsp;&nbsp;</th>
-      			<th>&nbsp;&nbsp;글 제목&nbsp;&nbsp;</th>
-      			<th>&nbsp;&nbsp;작성&nbsp;&nbsp;</th>
-      		</tr>
-			<th:block th:if="${session.boardList!=null}">
-				<th:block th:each="board:${session.boardList}">
-					<tr>
-						<td><span th:text="${board.getFreeId()}"></span></td>
-						<td><a th:onclick="|javascript:getPost('${board.getFreeId()}')|" th:text="${board.getTitle()}"></a></td>
-						<td><span th:text="${board.getWriter()}"></span></td>
-					</tr>
-				</th:block>
-			</th:block>
-      	</thead>
-      </table>
-      
-      <!-- 페이지 번호 -->
-      <th:block th:if=${session.pageMaker.getTotalCount()!=0}>
-	      <a th:if="${session.pageMaker.isPrev()}" style="text-decoration: none" th:onclick="|javascript:page('1')|">&laquo;&laquo;</a>
-	      <a th:if="${session.pageMaker.isPrev()} OR ${session.pageMaker.getPageNum()!=1}" style="text-decoration: none" th:onclick="|javascript:prevPage('${session.pageMaker.getPageNum()}')|">&laquo;</a>
-	      <th:block th:each="pageNumber:${#numbers.sequence(session.pageMaker.getStartPage(), session.pageMaker.getEndPage())}">
-	      	&nbsp;<a th:onclick="|javascript:page('${pageNumber}')|" th:text="${pageNumber}"></a>&nbsp;
-	      </th:block>
-	      <a th:if="${session.pageMaker.isNext()} OR ${(session.pageMaker.getPageNum())!=session.pageMaker.getTotalPageNum()}" style="text-decoration: none" th:onclick="|javascript:nextPage('${session.pageMaker.getPageNum()}')|">&raquo;</a>
-	      <a th:if="${session.pageMaker.isNext()}" style="text-decoration: none" th:onclick="|javascript:page('${session.pageMaker.getTotalPageNum()}')|">&raquo;&raquo;</a>
-      </th:block>
-      <hr>
-    </div>
-    <div class="col-sm-2 sidenav">
-      <div class="well">
-        <p>ADS</p>
-      </div>
-      <div class="well">
-        <p>ADS</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<footer class="container-fluid text-center">
-  <p>Footer Text</p>
-</footer>
-
-</body>
+    
 </html>

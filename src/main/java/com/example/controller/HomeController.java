@@ -6,17 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 	
-	@GetMapping(value = "/")
-	public String index() {
-		return "index";
-	}
-	
-	@GetMapping(value ="/joinPage")
+	@GetMapping(value ="/join")
 	public String joinPage() {
 		return "join";
 	}
 	
-	@GetMapping(value ="/loginPage")
+	@GetMapping(value ="/login")
 	public String loginPage() {
 		return "login";
 	}

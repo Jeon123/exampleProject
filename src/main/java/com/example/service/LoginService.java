@@ -34,6 +34,6 @@ public class LoginService {
 		
 		session.setAttribute("loginUser", users);
 		
-		return "index";
+		return "redirect:/";
 	}
 }

@@ -1,6 +1,7 @@
 package com.example.service.freeboard;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.model.FreeBoard;
@@ -9,10 +10,10 @@ import com.example.pageMaker.PageMaker;
 @Service
 public class PageMakerService {
 	
-    public PageMaker generatePageMaker(int pageNum, int contentNum, JpaRepository<FreeBoard, Long> repository) {
+    public PageMaker generatePageMaker(int pageNum, int contentNum, List<FreeBoard> repository) {
         PageMaker pageMaker = new PageMaker();
         
-        int totalCount = (int) repository.count();
+        int totalCount = (int) repository.size();
         
         /*---------페이지 객체에 새로운 정보 다시 지정해주는 부분------------------*/
         // 전체 게시글 개수 지정한다

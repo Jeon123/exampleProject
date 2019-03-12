@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+	<title>spring boot</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<link rel="stylesheet" th:href="@{/file/css/main.css}">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+
+<header th:replace="fragment/header :: headerFragment"></header>
+
+<div class="container-fluid text-center">    
+  <div class="row content">
+    <div class="col-sm-2 sidenav">
+      <form id="search">
+       <p><input type="text" id="searchText" placeholder="검색..." style="width:100%"></input></p>
+      </form>
+      <hr style="border-color:black;">
+      <p><a href="/">홈</a></p>
+      <p><a href="#">공지사항</a></p>
+      <p><a href="#">태그</a></p>
+      <p><a href="#">방명록</a></p>
+      <hr style="border-color:black;">
+      <p><a href="/category">category</a></p>
+    </div>
+	<div layout:fragment="content"></div>
+  </div>
+</div>
+
+<footer th:replace="fragment/footer :: footerFragment"></footer>
+
+</html>

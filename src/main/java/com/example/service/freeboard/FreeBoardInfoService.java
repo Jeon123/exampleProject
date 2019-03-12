@@ -17,18 +17,10 @@ public class FreeBoardInfoService {
 	@Autowired
 	HttpSession session;
 	
-	public String getFreeBoardInfo(String stringFreeId) {
+	public FreeBoard getFreeBoardInfo(String stringFreeId) {
 		Long freeId = Long.parseLong(stringFreeId);
 		
-		FreeBoard freeBoard = freeBoardRepository.findByFreeId(freeId);
-		
-		if(freeBoard == null) {
-			return "freeBoard";
-		}
-		
-		session.setAttribute("freeBoard", freeBoard);
-		
-		return "freeBoardInfo";
+		return freeBoardRepository.findByFreeId(freeId);
 	}
 	
 }

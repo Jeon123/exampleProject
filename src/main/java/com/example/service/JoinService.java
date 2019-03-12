@@ -29,7 +29,7 @@ public class JoinService {
 		
 		usersRepository.save(users);
 		
-		return "index";
+		return "redirect:/";
 	}
 	
 }

@@ -1,17 +1,21 @@
 package com.example.controller;
 
-import java.util.Map;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.service.freeboard.FreeBoardDeleteService;
+import com.example.model.FreeBoard;
+import com.example.model.FreeBoardSearchVo;
 import com.example.service.freeboard.FreeBoardInfoService;
 import com.example.service.freeboard.FreeBoardListService;
-import com.example.service.freeboard.FreeBoardWriteService;
+import com.example.service.freeboard.FreeBoardSearch;
+import com.example.service.freeboard.FreeBoardService;
 
 @Controller
 public class FreeBoardController {
@@ -20,72 +24,81 @@ public class FreeBoardController {
 	private FreeBoardListService freeBoardListService;
 	
 	@Autowired
-	private FreeBoardWriteService freeBoardWriteService;
-	
-	@Autowired
 	private FreeBoardInfoService freeBoardInfoService;
 	
 	@Autowired
-	private FreeBoardDeleteService freeBoardDeleteService;
+	private FreeBoardService freeBoardService;
+	
+	@Autowired
+	private FreeBoardSearch freeBoardSearch;
 	
 	private int returnIntValue(String stringToInt) {
 		return Integer.parseInt(stringToInt);
 	}
 	
-	@GetMapping(value ="/freeBoardWritePage")
+	@GetMapping(value ="/boardWrite")
 	public String freeBoardWritePage() {
 		return "freeBoardWrite";
 	}
 	
-	@GetMapping(value ="/freeBoardUpdatePage")
-	public String freeBoardUpdatePage() {
+	@GetMapping("/boardUpdate/{freeId}")
+	public String freeBoardUpdatePage(Model model, @PathVariable(value = "freeId") String freeId) {
+		model.addAttribute("boardInfo", freeBoardInfoService.getFreeBoardInfo(freeId));
 		return "freeBoardUpdate";
 	}
 	
-	@GetMapping("/freeBoard")
-	public String freeBoard(@RequestParam(value = "pageNum", defaultValue = "1") String pageNum) {
+	@GetMapping("/")
+	public String freeBoard(Model model, @RequestParam(value = "pageNum", defaultValue = "1") String pageNum) {
+		FreeBoardSearchVo fbsv = freeBoardListService.freeBoardList(returnIntValue(pageNum));
 		
-		String page = freeBoardListService.freeBoardList(returnIntValue(pageNum));
+		model.addAttribute("freeBoard", fbsv.getFreeBoardList());
+		model.addAttribute("pageMaker", fbsv.getPageMaker());
+		//model.addAttribute("category", fbsv.getCategory());
 		
-		return page;
+		return "freeBoard";
 	}
 	
-	@PostMapping("/freeBoardWriteRequest")
-	public String freeBoardWriteRequest(@RequestParam Map<String, String> paramMap) {
-		String title = paramMap.get("title");
-		String content = paramMap.get("content");
-		String writer = paramMap.get("writer");
+	@ResponseBody
+	@PostMapping("/boardWriteRequest")
+	public FreeBoard freeBoardWriteRequest(@RequestBody FreeBoard freeBoard) {
 		
-		freeBoardWriteService.write(title, content, writer);
+		return freeBoardService.write(freeBoard);
+	}
+
+	@ResponseBody
+	@PostMapping("/boardUpdateRequest")
+	public FreeBoard freeBoardUpdateRequest(@RequestBody FreeBoard freeBoard) {
 		
-		return "redirect:/freeBoard";
+		return freeBoardService.update(freeBoard);
 	}
 	
-	@PostMapping("/freeBoardUpdateRequest")
-	public String freeBoardUpdateRequest(@RequestParam Map<String, String> paramMap) {
-		String freeId = paramMap.get("freeId");
-		String title = paramMap.get("title");
-		String content = paramMap.get("content");
-		String writer = paramMap.get("writer");
+	@GetMapping("/{boardNum}")
+	public String getPost(Model model, @PathVariable(value = "boardNum") String boardNum) {
+		model.addAttribute("boardInfo", freeBoardInfoService.getFreeBoardInfo(boardNum));
 		
-		freeBoardWriteService.update(freeId, title, content, writer);
-		
-		return "redirect:/freeBoardInfo?freeId=" + freeId;
+		return "freeBoardInfo";
 	}
 	
-	@GetMapping("/freeBoardInfo")
-	public String getPost(@RequestParam(value = "freeId") String freeId) {
-		String page = freeBoardInfoService.getFreeBoardInfo(freeId);
+	@GetMapping("/boardDelete/{freeId}")
+	public String freeBoardDeleteRequest(@PathVariable(value = "freeId") String freeId) {
+		freeBoardService.delete(freeId);
 		
-		return page;
+		return "redirect:/";
 	}
 	
-	@GetMapping("/freeBoardDelete")
-	public String freeBoardDeleteRequest(@RequestParam(value = "freeId") String freeId) {
-		freeBoardDeleteService.delete(freeId);
+	@GetMapping("/{category}/{searchtext}")
+	public String freeBoardSearchRequest(
+			Model model, 
+			@PathVariable(value = "category") String category, 
+			@PathVariable(value = "searchtext") String searchText, 
+			@RequestParam(value = "pageNum", defaultValue = "1") String pageNum) {
 		
-		return "redirect:/freeBoard";
+		FreeBoardSearchVo fbsv = freeBoardSearch.freeBoardList(category, searchText, returnIntValue(pageNum));
+		
+		model.addAttribute("freeBoard", fbsv.getFreeBoardList());
+		model.addAttribute("pageMaker", fbsv.getPageMaker());
+		model.addAttribute("searchText", searchText);
+		
+		return "/search";
 	}
-	
-	
 }
