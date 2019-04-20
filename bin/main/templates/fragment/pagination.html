@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<th:block th:fragment="pagination" th:if=${pageMaker.totalCount!=0}>
+	<section class="navigation">
+		<h2 class="screen_out" th:text="navigation"></h2>
+		<div class="navigation-wrapper">
+			<a class="nav-end prev"
+				th:classappend="${pageMaker.pageNum==1}? no-more-prev"
+				th:href="@{'/?pageNum=' + ${pageMaker.pageNum-1}}">
+				<svg width="10px" height="18px" viewBox="0 0 10 18">
+		  	 	<g>
+		  	 		<polygon points="9, 18 10, 17 2, 9 10, 1 9, 0 0, 9 "></polygon>
+		  	 	</g>
+		  	 </svg>
+			</a>
+			<th:block
+				th:each="pageNumber:${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
+				<a th:classappend="${pageMaker.pageNum==pageNumber}? activeNumber"
+					class="page-item"
+					th:href="@{'?pageNum=' + ${#numbers.formatInteger(pageNumber,1)}}">
+					<span th:text="${pageNumber}"></span>
+				</a>
+			</th:block>
+			<a class="nav-end next"
+				th:classappend="${pageMaker.pageNum==pageMaker.totalPageNum}? no-more-next"
+				th:href="@{'/?pageNum=' + ${pageMaker.pageNum+1}}">
+				<svg width="10px" height="18px" viewBox="0 0 10 18">
+             	<g>
+             		<polygon points="1,0 0,1 8,9 0,17 1,18 10,9 "></polygon>
+             	</g>
+          	 </svg>
+			</a>
+		</div>
+	</section>
+</th:block>
+</html>

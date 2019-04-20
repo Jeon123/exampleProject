@@ -1,0 +1,143 @@
+@charset "UTF-8";
+
+.mainDiv {
+	display: flex;
+	flex-direction: row;
+	min-height: 100%;
+}
+
+.sideBar {
+	padding: 10px 20px 70px 20px; 
+	background-color : #0C1831;
+	color: #1ee1b9;
+	min-width: 300px;
+	text-align: left;
+	text-decoration: none;
+	flex-basis: 25%;
+	display: block;
+	flex: none;
+}
+
+.sideBar h2 {
+	text-align: center;
+	margin-top: 0;
+	margin-bottom: 50px;
+}
+
+.mainPage {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 74.99%;
+	padding: 55px 40px 30px 50px;
+	overflow: hidden;
+}
+
+.footer-container {
+	margin-top: 50px;
+}
+
+ul li {
+	margin-bottom: 10px;
+}
+
+ul li:last-child {
+	margin-bottom: 0px;
+}
+
+.userInfo {
+	display: flex;
+    justify-content: flex-end;
+	margin-bottom: 40px;
+}
+
+.searchBar input {
+	color: #1ee1b9;
+	margin: 10px 0px 10px 0px;
+	padding: 9px 8px 9px 8px;
+	width: 100%;
+	box-sizing: border-box;
+	border: 1px solid #1ee1b9;
+	background-color: transparent;
+	font-size: 16px;
+}
+
+.searchBar input::-webkit-input-placeholder {
+	color: #1ee1b9;
+}
+
+.aside-button {
+	display: none;
+	background: 0;
+	border: 0;
+    outline: 0;
+	background-color: transparent;
+    border-radius: initial;
+    min-width: initial;
+    padding: 0;
+    position: relative;
+    width: 36px;
+    height: 36px;
+}
+
+.aside-button>svg {
+	fill: #1ee1b9;
+}
+
+@media screen and (max-width: 960px) {
+	.mainDiv {
+		display: block;
+	}
+	
+	.sideBar {
+		overflow: hidden;
+	    padding: 0px 16px 0px 16px;
+	    position: fixed;
+	    flex-direction: column;
+	    top: 0;
+	    left: 0;
+	    right: 0;
+	    transition: height .250s ease;
+	    width: auto;
+	    height: 56px;
+	    z-index: 165;
+	}
+	
+	.sideBar h2 {
+		margin-bottom: 0;
+	}
+	.sideBar .site-header .site-title {
+	    display: flex;
+    	font-size: 20px;
+    	margin-right: 16px;
+	}
+	.sideBar.is-open {
+		overflow: auto;
+		height: 100%;
+	}
+	.aside-button {
+		display: block;
+	}
+	
+	.userInfo {
+		order: 2;
+		margin-bottom: 0;
+		height: 36px;
+		align-items: center;
+	}
+	
+	.site-header {
+		oredr: 1;
+	}
+	
+	.aside-button {
+		order: 3;
+	}
+	
+	.first {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		height: 56px;
+	}
+}
