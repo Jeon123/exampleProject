@@ -1,37 +1,51 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  data-layout-decorate="~{layout/default}"
-	  >
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	data-layout-decorate="~{layout/default}">
 <head>
-   <script type="text/javascript" src="./file/ckeditor/ckeditor.js"></script>
-   <script type="text/javascript">
-   $(window).on("load", function(){
-	   CKEDITOR.replace('content');
-   });
-	
-  	function freeBoardDelete(freeId) {
-  		location.href="/boardDelete/" + freeId
-  	}
-  	
-  	function freeBoardUpdate(freeId) {
-  		location.href="/boardUpdate/" + freeId
-  	}
-  </script>
+<script type="text/javascript" src="/ckeditor/ckeditor.js?ver=1"></script>
+<script th:src="@{/js/boardInfo.js?ver=1}"></script>
+<link rel="stylesheet" th:href="@{/css/boardInfo.css?ver=1}">
 </head>
 
-  <div layout:fragment="content" class="col-sm-10 text-left"> 
-    <br>
-    <h5 th:text="${boardInfo.title}"></h5>
-    <br>
-    <textarea th:text="${boardInfo.content}" readonly="readonly" name="content"></textarea>
-    <br><br>
-    <th:block th:if="${session.loginUser!=null}">
-     <th:block th:if="${boardInfo.writer} == ${session.loginUser.getUsername()}">
-      <button th:onclick="|javascript:freeBoardUpdate('${boardInfo.freeId}')|">수정</button>&nbsp;
-      <button th:onclick="|javascript:freeBoardDelete('${boardInfo.freeId}')|">삭제</button>&nbsp;&nbsp;
-     </th:block>
-    </th:block>
-  </div>
+<div layout:fragment="content">
+	<div class="boardTitle uk-margin">
+		<h2 th:text="${boardInfo.title}"></h2>
+		<a class="category" href="/" th:text="${boardInfo.category}"></a> <span
+			class="divider">·</span> <span class="date"
+			th:text="|${#temporals.format(boardInfo.createTime, 'yyyy.MM.dd HH:mm')}|"></span>
+	</div>
+	<div class="boardcontent uk-margin">
+		<textarea th:text="${boardInfo.content}" name="content" id="content"></textarea>
+		<th:block th:if="${session.loginUser!=null}">
+			<th:block th:if="${boardInfo.writer} == ${session.loginUser.getUsername()}">
+				<div class="boardInfo-button uk-margin">
+					<button class="uk-button-default uk-button-small"
+						th:onclick="|javascript:freeBoardUpdate('${boardInfo.freeId}')|">Update</button>&nbsp;
+					<button class="uk-button-danger uk-button-small"
+						th:onclick="|javascript:freeBoardDelete('${boardInfo.freeId}')|">Delete</button>
+				</div>
+			</th:block>
+		</th:block>
+	</div>
 
+	<div class="uk-margin">
+		<h3>User Comment</h3>
+	</div>
+
+	<div class="comments uk-margin"></div>
+
+	<form class="comment-insert uk-margin">
+		<input type="hidden" class="comment-boardId"
+			th:value="${boardInfo.freeId}">
+		<input th:if="${session.loginUser!=null}" type="hidden" class="comment-writer"
+			th:value="${session.loginUser.getUsername()}">
+		<div class="uk-margin">
+			<textarea th:disabled="${session.loginUser==null}" class="comment-content uk-textarea"></textarea>
+		</div>
+		<div class="uk-margin">
+			<input class="uk-input" type="submit" th:value="Submit">
+		</div>
+	</form>
+</div>
 </html>

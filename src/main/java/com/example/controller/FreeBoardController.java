@@ -12,28 +12,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.example.model.FreeBoard;
 import com.example.model.FreeBoardSearchVo;
-import com.example.service.freeboard.FreeBoardInfoService;
-import com.example.service.freeboard.FreeBoardListService;
-import com.example.service.freeboard.FreeBoardSearch;
+import com.example.service.freeboard.CommonService;
 import com.example.service.freeboard.FreeBoardService;
 
 @Controller
 public class FreeBoardController {
 	
 	@Autowired
-	private FreeBoardListService freeBoardListService;
-	
-	@Autowired
-	private FreeBoardInfoService freeBoardInfoService;
-	
-	@Autowired
 	private FreeBoardService freeBoardService;
 	
 	@Autowired
-	private FreeBoardSearch freeBoardSearch;
+	private CommonService commonService;
 	
 	private int returnIntValue(String stringToInt) {
 		return Integer.parseInt(stringToInt);
+	}
+	
+	private Long returnLongValue(String stringToLong) {
+		return Long.parseLong(stringToLong);
 	}
 	
 	@GetMapping(value ="/boardWrite")
@@ -43,17 +39,17 @@ public class FreeBoardController {
 	
 	@GetMapping("/boardUpdate/{freeId}")
 	public String freeBoardUpdatePage(Model model, @PathVariable(value = "freeId") String freeId) {
-		model.addAttribute("boardInfo", freeBoardInfoService.getFreeBoardInfo(freeId));
+		model.addAttribute("boardInfo", freeBoardService.getFreeBoardInfo(freeId));
 		return "freeBoardUpdate";
 	}
 	
 	@GetMapping("/")
 	public String freeBoard(Model model, @RequestParam(value = "pageNum", defaultValue = "1") String pageNum) {
-		FreeBoardSearchVo fbsv = freeBoardListService.freeBoardList(returnIntValue(pageNum));
+		FreeBoardSearchVo fbsv = freeBoardService.freeBoardList(returnIntValue(pageNum));
+		commonService.getsideBarInfo();
 		
 		model.addAttribute("freeBoard", fbsv.getFreeBoardList());
 		model.addAttribute("pageMaker", fbsv.getPageMaker());
-		//model.addAttribute("category", fbsv.getCategory());
 		
 		return "freeBoard";
 	}
@@ -74,31 +70,46 @@ public class FreeBoardController {
 	
 	@GetMapping("/{boardNum}")
 	public String getPost(Model model, @PathVariable(value = "boardNum") String boardNum) {
-		model.addAttribute("boardInfo", freeBoardInfoService.getFreeBoardInfo(boardNum));
+		model.addAttribute("boardInfo", freeBoardService.getFreeBoardInfo(boardNum));
 		
 		return "freeBoardInfo";
 	}
 	
 	@GetMapping("/boardDelete/{freeId}")
 	public String freeBoardDeleteRequest(@PathVariable(value = "freeId") String freeId) {
-		freeBoardService.delete(freeId);
+		freeBoardService.delete(returnLongValue(freeId));
 		
 		return "redirect:/";
 	}
 	
-	@GetMapping("/{category}/{searchtext}")
+	@GetMapping("/search/{searchtext}")
 	public String freeBoardSearchRequest(
 			Model model, 
-			@PathVariable(value = "category") String category, 
 			@PathVariable(value = "searchtext") String searchText, 
 			@RequestParam(value = "pageNum", defaultValue = "1") String pageNum) {
 		
-		FreeBoardSearchVo fbsv = freeBoardSearch.freeBoardList(category, searchText, returnIntValue(pageNum));
+		FreeBoardSearchVo fbsv = freeBoardService.freeBoardSearchList(searchText, returnIntValue(pageNum));
 		
 		model.addAttribute("freeBoard", fbsv.getFreeBoardList());
 		model.addAttribute("pageMaker", fbsv.getPageMaker());
 		model.addAttribute("searchText", searchText);
 		
-		return "/search";
+		return "freeBoard";
 	}
+	
+	@GetMapping("/category/{searchtext}")
+	public String freeBoardCategoryRequest(
+			Model model, 
+			@PathVariable(value = "searchtext") String searchText, 
+			@RequestParam(value = "pageNum", defaultValue = "1") String pageNum) {
+		
+		FreeBoardSearchVo fbsv = freeBoardService.freeBoardCategoryList(searchText, returnIntValue(pageNum));
+		
+		model.addAttribute("freeBoard", fbsv.getFreeBoardList());
+		model.addAttribute("pageMaker", fbsv.getPageMaker());
+		model.addAttribute("searchText", searchText);
+		
+		return "freeBoard";
+	}
+	
 }

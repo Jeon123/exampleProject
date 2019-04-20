@@ -1,72 +1,52 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  data-layout-decorate="~{layout/default}"
-	  >
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	data-layout-decorate="~{layout/default}">
 <head>
-  <script type="text/javascript">
-  	function page(pageNum) {
-  		location.href = "/?pageNum=" + pageNum;
-  	}
-  	
-  	function nextPage(pageNum) {
-  		var num = parseInt(pageNum) + 1
-  		location.href = "/?pageNum=" + num;
-  	}
-  	
-  	function prevPage(pageNum) {
-  		var num = parseInt(pageNum) - 1
-  		location.href = "/?pageNum=" + num;
-  	}
-  	
-  	function getPost(freeId) {
-  		location.href = "/" + freeId;
-  	}
-  	
-  	$(document).on("submit", "#search", function(event){
-  		event.preventDefault();
-  		if($("#searchText").val()=="") {
-  			alert("검색어를 입력해 주세요.");
-  		}else {
-	  		location.href = "search/" + $("#searchText").val();
-  		}
-  	});
-  </script>
+<link rel="stylesheet" th:href="@{/css/freeBoard.css?ver=1}">
 </head>
 
-  <div layout:fragment="content" class="col-sm-10 text-left"> 
-    <h4>FreeBoard</h4>
-    <button th:if="${session.loginUser!=null}" onclick="location.href='/boardWrite'">글쓰기</button>
-    <table>
-    	<thead>
-    		<tr>
-    			<th>&nbsp;&nbsp;글 제목&nbsp;&nbsp;</th>
-    			<th>&nbsp;&nbsp;작성&nbsp;&nbsp;</th>
-    		</tr>
-    	</thead>
-    	<tbody id="textsearch">
-	<th:block th:if="${freeBoard!=null}">
-		<th:block th:each="board:${freeBoard}">
-			<tr>
-				<td><a th:onclick="|javascript:getPost('${board.freeId}')|" th:text="${board.title}"></a></td>
-				<td><span th:text="${board.writer}"></span></td>
-			</tr>
+<div layout:fragment="content" class="mainPage-content text-left">
+	<div class="uk-margin">
+		<h1>FreeBoard</h1>
+		<h5 th:if="${searchText!=null}">'<strong th:text="${searchText}"></strong>'에 대한 검색결과 <span th:text="${pageMaker.totalCount}"></span> 개</h5>
+	</div>
+	<div class="flex-container uk-margin">
+		<th:block th:if="${freeBoard!=null}" th:each="board:${freeBoard}">
+			<article class="article">
+				<a class="cover-image" th:href="'/' + ${board.freeId}">
+					<div class="image"></div>
+				</a>
+				<div class="details">
+					<div class="detail-top">
+						<h3>
+							<a th:href="'/' + ${board.freeId}" th:text="${board.title}"></a>
+						</h3>
+					</div>
+					<div class="detail-bottom">
+						<a class="category" th:href="'/category/' + ${board.category}"
+							th:text="${board.category}"></a> <span class="divider">·</span> <span
+							class="date"
+							th:text="${#temporals.format(board.createTime, 'yyyy.MM.dd HH:mm')}"></span>
+					</div>
+				</div>
+			</article>
 		</th:block>
-	</th:block>
-    	</tbody>
-    </table>
-    
-    <!-- 페이지 번호 -->
-     <th:block th:if=${pageMaker.totalCount!=0}>
-     <a th:if="${pageMaker.pageNum!=1}" style="text-decoration: none" th:onclick="|javascript:page('1')|">&laquo;&laquo;</a>
-     <a th:if="${pageMaker.pageNum!=1}" style="text-decoration: none" th:onclick="|javascript:prevPage('${pageMaker.pageNum}')|">&laquo;</a>
-     <th:block th:each="pageNumber:${#numbers.sequence(pageMaker.startPage, pageMaker.endPage)}">
-     	&nbsp;<a th:onclick="|javascript:page('${pageNumber}')|" th:text="${pageNumber}"></a>&nbsp;
-     </th:block>
-     <a th:if="${(pageMaker.pageNum)!=pageMaker.totalPageNum}" style="text-decoration: none" th:onclick="|javascript:nextPage('${pageMaker.pageNum}')|">&raquo;</a>
-     <a th:if="${(pageMaker.pageNum)!=pageMaker.totalPageNum}" style="text-decoration: none" th:onclick="|javascript:page('${pageMaker.totalPageNum}')|">&raquo;&raquo;</a>
-    </th:block>
-    <hr>
-  </div>
-    
+	</div>
+	<div class="mainPage-writing uk-margin">
+		<button th:if="${session.loginUser!=null}"
+			class="uk-button-default uk-button-small"
+			onclick="location.href='/boardWrite'">Writing</button>&nbsp;
+		<button 
+			class="uk-button-default uk-button-small"
+			onclick="location.href='/download/excel/FreeBoard'">Post Excel Download</button>
+		<button 
+			class="uk-button-default uk-button-small"
+			onclick="location.href='/download/excel/Comment'">Comment Excel Download</button>
+	</div>
+
+	<!-- pagination -->
+	<th:block th:replace="fragment/pagination :: pagination"></th:block>
+
+</div>
 </html>

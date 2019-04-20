@@ -3,13 +3,16 @@ package com.example.controller;
 import java.util.Map;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.model.Users;
 import com.example.service.JoinService;
 import com.example.service.LoginService;
 
@@ -26,13 +29,18 @@ public class UsersController {
 	private HttpSession session;
 
 	@PostMapping(value = "/joinRequest")
-	public String joinRequest(@RequestParam Map<String, String> paramMap) {
-		String userId = paramMap.get("user_id");
-		String userPw = paramMap.get("user_pw");
-		String userName = paramMap.get("user_name");
+	public String joinRequest(@Valid Users user, BindingResult bindingResult, @RequestParam Map<String, String> paramMap) {
+		String page = "";
 		
-		String page = joinService.joinUser(userId, userPw, userName);
-		
+		if(bindingResult.hasErrors()) {
+			page = "redirect:/";
+		} else {
+			String userId = paramMap.get("user_id");
+			String userPw = paramMap.get("user_pw");
+			String userName = paramMap.get("user_name");
+			
+			page = joinService.joinUser(userId, userPw, userName);
+		}
 		
 		return page;
 	}

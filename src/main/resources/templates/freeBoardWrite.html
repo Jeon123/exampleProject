@@ -1,83 +1,120 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  data-layout-decorate="~{layout/default}"
-	  >
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	data-layout-decorate="~{layout/default}">
 <head>
-  <script type="text/javascript" src="./file/ckeditor/ckeditor.js"></script>
-  <script type="text/javascript">
-		function backPage(num) {
-			window.history.go(-1);
-	  	}
+<script type="text/javascript" src="/ckeditor/ckeditor.js?ver=4"></script>
+<script type="text/javascript">
+
+ window.onload = function(){
+      
+ };
+</script>
+<style>
+.insert-button {
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-end;
+}
+
+.insert-top {
+	display: flex;
+}
+
+.insert-category {
+	flex-basis: 30%;
+}
+</style>
+<script type="text/javascript">
+	function backPage(num) {
+		window.history.go(-1);
+	}
+
+	$(window).on("load", function() {
+		var editorConfig = {
+				uploadUrl: "/upload/image", 
+		        filebrowserUploadUrl: "/upload/image" //이미지 업로드
+		    };
+
+		    CKEDITOR.on('dialogDefinition', function(ev) {
+		        var dialogName = ev.data.name;
+		        var dialogDefinition = ev.data.definition;
+
+		        switch (dialogName) {
+		            case 'image': //Image Properties dialog
+		            dialogDefinition.removeContents('info');
+		            dialogDefinition.removeContents('Link');
+		            dialogDefinition.removeContents('advanced');
+		            break;
+		        }
+		    });
+		    ck = CKEDITOR.replace("content", editorConfig);
+
+		$('.insert-category').change(function() {
+			if ($('.insert-category').hasClass('uk-form-danger') == true) {
+				$('.insert-category').removeClass('uk-form-danger');
+			};
+		});
 		
-	    $(window).on("load", function(){
-		    CKEDITOR.replace('content');
-	    });
-	    
-		function FormSubmit(f) { 
-			CKEDITOR.instances.content.updateElement(); 
-			if(f.content.value == "") { 
-				alert("내용을 입력해 주세요."); 
-				return false; 
-			} 
-			alert(f.content.value); 
-			// 전송은 하지 않습니다. 
-			return false;
-		}
-	</script>
-	<script type="application/javascript">
-		$(document).ready(function(){
-			$('#insertForm').submit(function(event){
-				CKEDITOR.instances.content.updateElement();
-				var freeBoard = {
-					category: $('#category').val(),
-					title: $('#title').val(),
-					content: $('#content').val(),
-					writer: $('#writer').val()
-				}
-				event.preventDefault();
-				if(confirm("등록 하시겠습니까?") == true){
-					$.ajax({
-						url: '/boardWriteRequest',
-						type: 'POST',
-						dataType: 'json',
-						contentType : "application/json; charset=UTF-8",
-						data: JSON.stringify(freeBoard),
-						success: function(){
-							alert("등록 완료");
-							location.href="/";
-						},
-						error: function(){
-							alert("에러 발생");
-							location.href="/";
-						}
-					})
-				}
-			})	
-		})
-	</script>
+		$('#insertForm').submit(function(event) {
+			CKEDITOR.instances.content.updateElement();
+			var freeBoard = {
+				category : $('#category').val(),
+				title : $('#title').val(),
+				content : $('#content').val(),
+				writer : $('#writer').val()
+			}
+			event.preventDefault();
+			if (confirm("Do you want to write?") == true) {
+				$.ajax({
+					url : '/boardWriteRequest',
+					type : 'POST',
+					dataType : 'json',
+					contentType : "application/json; charset=UTF-8",
+					data : JSON.stringify(freeBoard),
+					success : function() {
+						alert("Complete");
+						location.href = "/";
+					},
+					error : function() {
+						alert("Error");
+						$('.insert-category').addClass('uk-form-danger');
+					}
+				});
+			}
+		});
+	});
+
+</script>
 </head>
 
-  <div layout:fragment="content" class="col-sm-10 text-left"> 
-    <h4>FreeBoard</h4>
-    <br><br>
-    <form id="insertForm">
-    	<select id="category">
-    	    <option value="" selected disabled hidden>==카테고리 선택==</option>
-    		<option value="1">1</option>
-    		<option value="2">2</option>
-    		<option value="3">3</option>
-    		<option value="4">4</option>
-    		<option value="5">5</option>
-    	</select>
-    	<input type="text" placeholder="글 제목" id="title">
-    	<br><br>
-    	<textarea placeholder="글 내용" id="content"></textarea>
-    	<br><br>
-    	<input type="hidden" th:value="${session.loginUser.getUsername()}" id="writer">
-    	<input type="submit" value="글쓰기">
-    	<input type="button" th:onclick="|javascript:backPage()|" value="취소">
-    </form>
-  </div>
-
+<div layout:fragment="content">
+	<div class="uk-margin">
+		<h3>Board Write</h3>
+	</div>
+	<form id="insertForm">
+		<div class="insert-top uk-margin">
+			<select id="category" class="insert-category uk-select">
+				<option value="" selected disabled hidden>==Category==</option>
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+			</select> 
+			<input type="text" placeholder="Title" class="insert-title uk-input" id="title">
+		</div>
+		<div class="uk-margin">
+			<textarea placeholder="Content" class="insert-content uk-textarea"
+				id="content"></textarea>
+		</div>
+		<div class="insert-button uk-margin">
+			<input type="submit" class="uk-button-default uk-button-small" value="Writing">&nbsp;
+			<input type="button"
+				class="uk-button-danger uk-button-small"
+				th:onclick="|javascript:backPage()|" value="Cancel">
+		</div>
+		<input type="hidden" th:value="${session.loginUser.getUsername()}" id="writer">
+	</form>
+</div>
 </html>

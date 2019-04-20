@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  data-layout-decorate="~{layout/default}"
-	  >
+	  data-layout-decorate="~{layout/default}">
 
-  <div layout:fragment="content" class="col-sm-10 text-left"> 
+  <div layout:fragment="content"> 
     <h1>Login</h1>
     <hr>
     <form action="/loginRequest" method="post">
-    	<input type="text" placeholder="아이디" name="user_id"/><br/><br/>
-    	<input type="password" placeholder="비밀번호" name="user_pw"/><br/><br/>
-    	<input type="submit" value="로그인">
+	    <div class="uk-margin">
+	    	<input type="text" placeholder="ID" class="uk-input" name="user_id"/><br/><br/>
+	    </div>
+	    <div class="uk-margin">
+	    	<input type="password" placeholder="PASSWORD" class="uk-input" name="user_pw"/><br/><br/>
+	    </div>
+	    <div class="uk-margin">
+	    	<input type="submit" class="uk-input" value="Login">
+	    </div>
     </form>
   </div>
 

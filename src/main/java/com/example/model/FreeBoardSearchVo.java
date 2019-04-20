@@ -13,5 +13,4 @@ public class FreeBoardSearchVo {
 	
 	private PageMaker pageMaker;
 	
-	private List<FreeBoardCategory> category;
 }

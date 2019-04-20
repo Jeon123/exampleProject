@@ -1,36 +1,86 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
-	<title>spring boot</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-	<link rel="stylesheet" th:href="@{/file/css/main.css}">
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<title>spring boot</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/default.js?ver=1"></script>
+<script src="/uikit/js/uikit.min.js"></script>
+<script src="/uikit/js/uikit-icons.min.js"></script>
+<link rel="stylesheet" href="/uikit/css/uikit.min.css" />
+<link rel="stylesheet" th:href="@{/css/default.css?ver=1}">
+<link rel="stylesheet" th:href="@{/css/reset.css?ver=1}">
 </head>
-
-<header th:replace="fragment/header :: headerFragment"></header>
-
-<div class="container-fluid text-center">    
-  <div class="row content">
-    <div class="col-sm-2 sidenav">
-      <form id="search">
-       <p><input type="text" id="searchText" placeholder="검색..." style="width:100%"></input></p>
-      </form>
-      <hr style="border-color:black;">
-      <p><a href="/">홈</a></p>
-      <p><a href="#">공지사항</a></p>
-      <p><a href="#">태그</a></p>
-      <p><a href="#">방명록</a></p>
-      <hr style="border-color:black;">
-      <p><a href="/category">category</a></p>
-    </div>
-	<div layout:fragment="content"></div>
-  </div>
+<div class="mainDiv">
+	<aside class="sideBar">
+		<div class="first">
+			<div class="userInfo">
+				<th:block th:if="${session.loginUser==null}">
+						<a href="/join" uk-icon="icon: users"></a>
+						<a href="/login" uk-icon="icon: sign-in"></a>
+				</th:block>
+				<th:block th:if="${session.loginUser!=null}">
+						<span th:inline="text">Hi, [[${session.loginUser.getUsername()}]]!!</span>&nbsp;
+						<a href="#" uk-icon="icon: cog"></a>&nbsp;
+						<a href="/logout" uk-icon = "icon: sign-out"></a>
+				</th:block>
+				<button class="aside-button">
+					<svg width="18px" height="15px" viewBox="0 0 18 14">
+						<g>
+							<rect width="18" height="1"></rect>
+							<rect y="14" width="18" height="1"></rect>
+							<rect y="7" width="18" height="1"></rect>
+						</g>
+					</svg>
+				</button>	
+			</div>
+			<div class="site-header">
+				<h2 class="site-title">
+					<a href="/">My Blog</a>
+				</h2>
+			</div>
+		</div>
+		
+		<div class="secondary">
+			<section class="module search">
+				<h2 class="screen_out">Search</h2>
+				<form class="searchBar" id="search">
+					<input type="text" id="searchText" placeholder="Search..."></input>
+				</form>
+			</section>
+			<hr>
+			<section class="module menu">
+				<h2 class="screen_out">Menu</h2>
+				<div>
+					<ul>
+						<li><a href="/">Home</a></li>
+						<li><a href="#">Notice</a></li>
+						<li><a href="#">Tag</a></li>
+						<li><a href="#">GuestBook</a></li>
+					</ul>
+				</div>
+			</section>
+			<hr>
+			<section class="module category">
+				<h2 class="screen_out">Category</h2>
+				<div>
+					<th:block th:each="cate:${session.categoryList}">
+						<ul>
+							<li><a th:href="@{'/category/'+${cate.getCategory()}}" th:text="${cate.getCategory()}+'('+${cate.getCount()}+')'"></a></li>
+						</ul>
+					</th:block>
+				</div>
+			</section>
+			<hr>
+		</div>
+	</aside>
+	<div class="mainPage">
+		<div layout:fragment="content"></div>
+		<footer th:replace="fragment/footer :: footerFragment"></footer>
+	</div>
 </div>
-
-<footer th:replace="fragment/footer :: footerFragment"></footer>
 
 </html>

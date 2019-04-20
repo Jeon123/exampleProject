@@ -28,8 +28,6 @@ public class PageMakerService {
         pageMaker.setCurrentBlock(pageNum);
         // 마지막 블록 번호를 전체 게시글 수를 통해서 정한다
         pageMaker.setLastblock(pageMaker.getTotalCount());
-        // 현재 페이지 번호로 화살표 나타낼지 결정한다
-        pageMaker.prevNext(pageNum);
         // 시작페이지 번호를 현재 페이지 블록으로 정한다
         pageMaker.setStartPage(pageMaker.getCurrentBlock());
         // 현재 블록 번호와 마지막 블록 번호를 보내서 대조하고 페이지 블록의 마지막 번호를 지정한다

@@ -7,29 +7,8 @@ public class PageMaker {
     private int contentNum = 10;	// 한페이지에 보이는 게시글 
     private int startPage = 0;		// 현재 페이지 블록의 시작페이지
     private int endPage = 0;		// 현재 페이지 블록의 마지막 페이지
-    private boolean prev = false;	// 이전 페이지 화살표
-    private boolean next;			// 다음 페이지 화살표
     private int currentBlock;		// 현재 페이지 블록
     private int lastBlock;			// 마지막 페이지 블록
-    
-    public void prevNext(int pageNum) {
-    	if (pageNum > 0 && pageNum < 6) {
-    		setPrev(false);
-    		setNext(true);
-    		if(pageNum == getTotalPageNum()) {
-    			setNext(false);
-    		}
-    	} else if(getLastBlock() == getCurrentBlock()) {
-    		// 5개씩 페이지의 그룹번호를 지정한다.
-    		// 그룹 번호가 3이라는 것은 해당 페이지 그룹이 마지막이라는 것이기에 이전 화살표만 활성화한다 
-    		// 이 두개가 같다면 마지막 블록이므로 이전만 있고 이후가 없다.
-    		setPrev(true);
-    		setNext(false);        
-    	} else {
-    		setPrev(true);
-    		setNext(true);
-    	}
-    }
     
     // 전체 몇페이지까지 있을지 함수로 계산한다
     public int calcPage(int totalCount, int contentNum) {
@@ -94,22 +73,6 @@ public class PageMaker {
     		// 시작 페이지 + 4를 끝 페이지로 지정
     		this.endPage = getStartPage() + 4;
     	}
-    }
-    
-    public boolean isPrev() {
-    	return prev;
-    }
-    
-    public void setPrev(boolean prev) {
-    	this.prev = prev;
-    }
-    
-    public boolean isNext() {
-    	return next;
-    }
-    
-    public void setNext(boolean next) {
-    	this.next = next;
     }
     
     public int getCurrentBlock() {

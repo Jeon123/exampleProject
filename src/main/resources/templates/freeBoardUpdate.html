@@ -1,85 +1,93 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	  data-layout-decorate="~{layout/default}"
-	  >
-<head>
-  <script type="text/javascript" src="/file/ckeditor/ckeditor.js"></script>
-  <script type="text/javascript">
-		function backPage() {
-	  		window.history.go(-1);
-	  	}
-		
-	    $(window).on("load", function(){
-		    CKEDITOR.replace('content');
-	    });
-	
-		function FormSubmit(f) { 
-			CKEDITOR.instances.content.updateElement(); 
-			if(f.content.value == "") { 
-				alert("내용을 입력해 주세요."); 
-				return false; 
-			} 
-			alert(f.content.value); 
-			// 전송은 하지 않습니다. 
-			return false;
-		}
-  </script>
-  <script type="application/javascript">
-		$(document).ready(function(){
-			$('#updateForm').submit(function(event){
-				CKEDITOR.instances.content.updateElement();
-				var freeBoard = {
-					freeId: $('#freeId').val(),
-					category: $('#category').val(),
-					title: $('#title').val(),
-					content: $('#content').val(),
-					writer: $('#writer').val()
-				}
-				event.preventDefault();
-				if(confirm("수정 하시겠습니까?") == true){
-					$.ajax({
-						url: '/boardUpdateRequest',
-						type: 'POST',
-						dataType: 'json',
-						contentType : "application/json; charset=UTF-8",
-						data: JSON.stringify(freeBoard),
-						success: function(data){
-							alert("수정 완료");
-							location.href="/" + data.freeId;
-						},
-						error: function(){
-							alert("에러 발생");
-							location.href="/";
-						}
-					})
-				}
-			})	
-		})
-  </script>
-</head>
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      data-layout-decorate="~{layout/default}"
+      >
+  <head>
+    <script type="text/javascript" src="/ckeditor/ckeditor.js?ver=1"></script>
+    <style>
+	.update-button {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+	}
+	.update-top {
+		display: flex;
+	}
+	.update-category {
+		flex-basis: 30%;
+	}
+    </style>
+    <script type="text/javascript">
+      function backPage() {
+        window.history.go(-1);
+      }
 
-  <div layout:fragment="content" class="col-sm-10 text-left"> 
-    <h4>FreeBoard</h4>
-    <br><br>
+      $(window).on("load", function(){
+        CKEDITOR.replace('content');
+      });
+      
+      $(document).ready(function(){
+        $('#updateForm').submit(function(event){
+          CKEDITOR.instances.content.updateElement();
+          var freeBoard = {
+            freeId: $('#freeId').val(),
+            category: $('#category').val(),
+            title: $('#title').val(),
+            content: $('#content').val(),
+            writer: $('#writer').val()
+          }
+          event.preventDefault();
+          if(confirm("Do you want to update?") == true){
+            $.ajax({
+              url: '/boardUpdateRequest',
+              type: 'POST',
+              dataType: 'json',
+              contentType : "application/json; charset=UTF-8",
+              data: JSON.stringify(freeBoard),
+              success: function(data){
+                alert("Complete");
+                location.href="/" + data.freeId;
+              },
+              error: function(){
+                alert("Error");
+                location.href="/";
+              }
+            })
+          }
+        })	
+      })
+    </script>
+  </head>
+
+  <div layout:fragment="content"> 
+  <div class="uk-margin">
+    <h2>Board Update</h2>
+  </div>
     <form id="updateForm">
-    	<input type="hidden" id="freeId" th:value="${boardInfo.freeId}">
-    	<select id="category">
-    		<option value="" selected disabled hidden>==카테고리 선택==</option>
-    		<option value="1" th:selected="${boardInfo.category}==1">1</option>
-    		<option value="2" th:selected="${boardInfo.category}==2">2</option>
-    		<option value="3" th:selected="${boardInfo.category}==3">3</option>
-    		<option value="4" th:selected="${boardInfo.category}==4">4</option>
-    		<option value="5" th:selected="${boardInfo.category}==5">5</option>
-    	</select>
-    	<input type="text" placeholder="글 제목" id="title" th:value="${boardInfo.title}">
-    	<br><br>
-    	<textarea placeholder="글 내용" id="content" th:text="${boardInfo.content}"></textarea>
-    	<br><br>
-    	<input type="hidden" th:value="${session.loginUser.getUsername()}" id="writer">
-    	<input type="hidden" th:value="${boardInfo.createTime}" id="createTime">
-    	<input type="submit" value="수정">
-    	<input type="button" th:onclick="|javascript:backPage()|" value="취소">
+	  <div class="update-top uk-margin">
+	      <select class="update-category uk-select" id="category">
+	        <option value="" selected disabled hidden>==Category==</option>
+	        <option value="1" th:selected="${boardInfo.category}==1">1</option>
+	        <option value="2" th:selected="${boardInfo.category}==2">2</option>
+	        <option value="3" th:selected="${boardInfo.category}==3">3</option>
+	        <option value="4" th:selected="${boardInfo.category}==4">4</option>
+	        <option value="5" th:selected="${boardInfo.category}==5">5</option>
+	      </select>
+	      <input type="text" placeholder="Title" class="uk-input" id="title" th:value="${boardInfo.title}">
+	  </div>
+	  <div class="uk-margin">
+	  </div>
+	  <div class="uk-margin">
+	      <textarea placeholder="Content" id="content" th:text="${boardInfo.content}"></textarea>
+	  </div>
+	  <div class="update-button uk-margin">
+	      <input type="submit" class="uk-button-default uk-button-small" value="Update">&nbsp;
+	      <input type="button" class="uk-button-danger uk-button-small" th:onclick="|javascript:backPage()|" value="Cancel">
+	  </div>
+      <input type="hidden" id="freeId" th:value="${boardInfo.freeId}">
+      <input type="hidden" th:value="${boardInfo.createTime}" id="createTime">
+      <input type="hidden" th:value="${session.loginUser.getUsername()}" id="writer">
     </form>
   </div>
 
