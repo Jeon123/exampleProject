@@ -25,14 +25,12 @@ public class FreeBoard extends TimeEntity implements Serializable {
 	@Column(name = "content", length=9999)
 	private String content;
 	
-	@NotNull
 	@Column(name = "title")
 	private String title;
 
 	@Column(name = "writer")
 	private String writer;
 	
-	@NotNull
 	@Column(name = "category")
 	private String category;
 }

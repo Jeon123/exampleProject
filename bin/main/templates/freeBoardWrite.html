@@ -3,7 +3,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	data-layout-decorate="~{layout/default}">
 <head>
-<script type="text/javascript" src="/ckeditor/ckeditor.js?ver=4"></script>
+<script type="text/javascript" src="resources/ckeditor/ckeditor.js?ver=4"></script>
 <script type="text/javascript">
 
  window.onload = function(){
@@ -29,26 +29,26 @@
 	function backPage(num) {
 		window.history.go(-1);
 	}
+	
+    var editorConfig = {
+	        filebrowserUploadUrl : "/image/fileupload", //이미지만 업로드
+	        extraPlugins : 'uploadimage'
+	    };
+	    
+    CKEDITOR.on('dialogDefinition', function(ev) {
+        var dialogName = ev.data.name;
+        var dialogDefinition = ev.data.definition;
 
+        switch (dialogName) {
+            case 'image': //Image Properties dialog
+            //dialogDefinition.removeContents('info');
+            dialogDefinition.removeContents('Link');
+            dialogDefinition.removeContents('advanced');
+            break;
+        }
+    });
 	$(window).on("load", function() {
-		var editorConfig = {
-				uploadUrl: "/upload/image", 
-		        filebrowserUploadUrl: "/upload/image" //이미지 업로드
-		    };
-
-		    CKEDITOR.on('dialogDefinition', function(ev) {
-		        var dialogName = ev.data.name;
-		        var dialogDefinition = ev.data.definition;
-
-		        switch (dialogName) {
-		            case 'image': //Image Properties dialog
-		            dialogDefinition.removeContents('info');
-		            dialogDefinition.removeContents('Link');
-		            dialogDefinition.removeContents('advanced');
-		            break;
-		        }
-		    });
-		    ck = CKEDITOR.replace("content", editorConfig);
+	    CKEDITOR.replace("content", editorConfig);
 
 		$('.insert-category').change(function() {
 			if ($('.insert-category').hasClass('uk-form-danger') == true) {
@@ -84,7 +84,7 @@
 			}
 		});
 	});
-
+	window.parent.CKEDITOR.tools.callFunction('${CKEditorFuncNum}','${file_path}','파일전송완료');
 </script>
 </head>
 

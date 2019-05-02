@@ -19,14 +19,10 @@ public class Users {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	
-	@NotNull
-	@Pattern(regexp="\\S{2,6}", message="{error.description}")
 	private String userid;
-	
-	@NotNull
+
 	private String password;
-	
-	@NotNull
+
 	private String username;
 	
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.model.Users;
@@ -29,18 +30,15 @@ public class UsersController {
 	private HttpSession session;
 
 	@PostMapping(value = "/joinRequest")
-	public String joinRequest(@Valid Users user, BindingResult bindingResult, @RequestParam Map<String, String> paramMap) {
+	public String joinRequest(Users user, @RequestParam Map<String, String> paramMap) {
 		String page = "";
 		
-		if(bindingResult.hasErrors()) {
-			page = "redirect:/";
-		} else {
-			String userId = paramMap.get("user_id");
-			String userPw = paramMap.get("user_pw");
-			String userName = paramMap.get("user_name");
-			
-			page = joinService.joinUser(userId, userPw, userName);
-		}
+		String userId = paramMap.get("user_id");
+		String userPw = paramMap.get("user_pw");
+		String userName = paramMap.get("user_name");
+		
+		page = joinService.joinUser(userId, userPw, userName);
+		
 		
 		return page;
 	}
