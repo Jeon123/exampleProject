@@ -41,20 +41,23 @@ public class CkeditorFileUploadController {
 						String fileName = file.getName();
 						System.out.println("filename: " + fileName);
 						byte[] bytes = file.getBytes();
-						String uploadPath = req.getServletContext().getRealPath("/upload/image");
+						String uploadPath = "/Users/jeonminseok/upload/image";
+//						String uploadPath = req.getServletContext().getRealPath("/upload/image");
 						System.out.println("uploadPath: " + uploadPath);
 						File uploadFile = new File(uploadPath);
 						if(!uploadFile.exists()){
 							uploadFile.mkdirs();
 						}
 						fileName = UUID.randomUUID().toString();
-						uploadPath = uploadPath + "/" + fileName;
+//						uploadPath = uploadPath + "/" + fileName;
+//						out = new FileOutputStream(new File(uploadPath));
+//                        out.write(bytes);
 						out = new FileOutputStream(new File(uploadPath));
                         out.write(bytes);
                         
                         printWriter = resp.getWriter();
                         resp.setContentType("text/html");
-                        String fileUrl = req.getContextPath() + "/upload/image/" + fileName;
+                        String fileUrl = req.getContextPath() + "/Users/jeonminseok/upload/image/" + fileName;
                         
                         // {"uploaded" : 1, "fileName" : "test.jpg", "url" : "/img/test.jpg"}
                         json.addProperty("uploaded", 1);
