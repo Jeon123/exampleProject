@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  deploy_server:
+  build:
     machine: true
     steps:
       # deploy to server
