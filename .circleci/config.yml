@@ -4,7 +4,8 @@ jobs:
     machine: true
     steps:
       # deploy to server
-      - run:
-          name: deploy to server
-          command: ssh $SSH_USER@$SSH_HOST "~/deploy.sh"
+      - run: |
+         echo $SSH_USER
+         echo $SSH_HOST
+         ssh $SSH_USER@$SSH_HOST "~/app/git/deploy.sh"
 
